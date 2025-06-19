@@ -15,13 +15,21 @@ class _SignupState extends State<Signup> {
   TextEditingController passwordController = TextEditingController();
   bool isLoading = false;
   bool obscurePassword = true;
+  bool agreeToTerms = false;
 
   Future<void> createAccount() async {
     if (emailController.text.isEmpty ||
         passwordController.text.isEmpty ||
         nameController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please fill in all required fields')),
+        const SnackBar(content: Text('Please fill in all required fields')),
+      );
+      return;
+    }
+
+    if (!agreeToTerms) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please agree to terms & conditions')),
       );
       return;
     }
@@ -37,22 +45,20 @@ class _SignupState extends State<Signup> {
             password: passwordController.text,
           );
 
-      print(
-        'Account created successfully! User: ${userCredential.user?.email}',
-      );
-
       // Update user profile with display name
       await userCredential.user?.updateDisplayName(nameController.text.trim());
 
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Account created successfully!')));
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Account created successfully!')),
+        );
 
-      // Navigate back to login
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => Wapper()),
-      );
+        // Navigate to wrapper
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const Wapper()),
+        );
+      }
     } on FirebaseAuthException catch (e) {
       String errorMessage = 'An error occurred';
       if (e.code == 'weak-password') {
@@ -63,18 +69,23 @@ class _SignupState extends State<Signup> {
         errorMessage = 'Invalid email address';
       }
 
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(errorMessage)));
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(errorMessage)));
+      }
     } catch (e) {
-      print('Unexpected error: $e');
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('An unexpected error occurred')));
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('An unexpected error occurred')),
+        );
+      }
     } finally {
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -82,51 +93,56 @@ class _SignupState extends State<Signup> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create Account'),
+        title: const Text('Create Account'),
         backgroundColor: Colors.indigoAccent,
         foregroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "Let's Create Your Account",
-              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+            Center(
+              child: Image.asset('assets/wechat.png', height: 100, width: 100),
             ),
-            SizedBox(height: 20),
-            TextField(
+            const SizedBox(height: 20),
+            const Text(
+              "Let's Create Your Account",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 30),
+            TextFormField(
               controller: nameController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(20),
                 ),
-                hintText: "Full Name *",
-                prefixIcon: Icon(Icons.person_2),
+                hintText: "Full Name",
+                prefixIcon: const Icon(Icons.person_outline),
               ),
             ),
-            SizedBox(height: 20),
-            TextField(
+            const SizedBox(height: 15),
+            TextFormField(
               controller: emailController,
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(20),
                 ),
-                hintText: "E-mail *",
-                prefixIcon: Icon(Icons.email_outlined),
+                hintText: "Email",
+                prefixIcon: const Icon(Icons.email_outlined),
               ),
             ),
-            SizedBox(height: 20),
-            TextField(
+            const SizedBox(height: 15),
+            TextFormField(
               controller: passwordController,
               obscureText: obscurePassword,
               decoration: InputDecoration(
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(20),
                 ),
-                hintText: "Password *",
-                prefixIcon: Icon(Icons.lock),
+                hintText: "Password",
+                prefixIcon: const Icon(Icons.lock_outline),
                 suffixIcon: IconButton(
                   icon: Icon(
                     obscurePassword
@@ -141,14 +157,21 @@ class _SignupState extends State<Signup> {
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 10),
             Row(
               children: [
-                Checkbox(value: true, onChanged: (_) {}),
-                Text("I agree to terms & conditions"),
+                Checkbox(
+                  value: agreeToTerms,
+                  onChanged: (value) {
+                    setState(() {
+                      agreeToTerms = value ?? false;
+                    });
+                  },
+                ),
+                const Text("I agree to terms & conditions"),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 30),
             InkWell(
               onTap: isLoading ? null : createAccount,
               child: Container(
@@ -160,21 +183,17 @@ class _SignupState extends State<Signup> {
                 ),
                 child: Center(
                   child: isLoading
-                      ? CircularProgressIndicator(color: Colors.white)
-                      : Text(
+                      ? const CircularProgressIndicator(color: Colors.white)
+                      : const Text(
                           "Create Account",
-                          style: TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white,
-                          ),
+                          style: TextStyle(fontSize: 20, color: Colors.white),
                         ),
                 ),
               ),
             ),
-            SizedBox(height: 50),
+            const SizedBox(height: 30),
             Row(
-              children: [
+              children: const [
                 Flexible(
                   child: Divider(thickness: 1, indent: 60, endIndent: 5),
                 ),
@@ -184,13 +203,27 @@ class _SignupState extends State<Signup> {
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CircleAvatar(child: Image.asset("assets/pandasall.png")),
-                SizedBox(width: 30),
-                CircleAvatar(child: Image.asset("assets/pandasall.png")),
+                CircleAvatar(
+                  backgroundColor: Colors.grey[200],
+                  child: const Icon(
+                    Icons.g_mobiledata,
+                    size: 30,
+                    color: Colors.red,
+                  ),
+                ),
+                const SizedBox(width: 20),
+                CircleAvatar(
+                  backgroundColor: Colors.grey[200],
+                  child: const Icon(
+                    Icons.facebook,
+                    size: 30,
+                    color: Colors.blue,
+                  ),
+                ),
               ],
             ),
           ],

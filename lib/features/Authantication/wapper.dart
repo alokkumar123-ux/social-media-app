@@ -1,5 +1,5 @@
 import 'package:e_commerce/features/Authantication/login.dart';
-import 'package:e_commerce/homepage.dart';
+import 'package:e_commerce/features/personalization/chatlog.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -40,7 +40,7 @@ class _WapperState extends State<Wapper> {
           if (snapshot.hasData && snapshot.data != null) {
             print('Wapper - User is authenticated: ${snapshot.data!.email}');
             print('Wapper - Navigating to Homepage');
-            return Homepage();
+            return Chatlog();
           } else {
             print('Wapper - User is not authenticated');
             print('Wapper - Navigating to Login');

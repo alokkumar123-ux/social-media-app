@@ -57,7 +57,7 @@ dev_dependencies:
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/panda.png"
+  image_path: "assets/wechat.png"
   min_sdk_android: 21
   
    # android min sdk min:16, default 21
@@ -82,16 +82,16 @@ flutter:
   # https://flutter.dev/to/asset-from-package
 flutter_native_splash:
   color: "#ffffff"
-  image: assets/panda.png
-  branding: assets/panda.png
+  image: assets/wechat.png
+  branding: assets/wechat.png
   color_dark: "#121212"
-  image_dark: assets/panda.png
-  branding_dark: assets/panda.png
+  image_dark: assets/wechat.png
+  branding_dark: assets/wechat.png
 
   android_12:
-    image: assets/panda.png
+    image: assets/wechat.png
     icon_background_color: "#ffffff"
-    image_dark: assets/panda.png
+    image_dark: assets/wechat.png
     icon_background_color_dark: "#121212"
 
   web: false

@@ -27,35 +27,27 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    final isdark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  Column(
-                    children: [
-                      Image.asset(
-                        isdark
-                            ? "assets/pandasall.png"
-                            : "assets/pandasall.png",
-                        width: 200,
-                      ),
-                      Text(
-                        "Welcome Back,",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+              const SizedBox(height: 50),
+              Center(
+                child: Image.asset(
+                  'assets/wechat.png',
+                  height: 120,
+                  width: 120,
+                ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 20),
+              const Text(
+                "Welcome Back,",
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 30),
               Form(
                 child: Column(
                   children: [
@@ -69,9 +61,10 @@ class _LoginState extends State<Login> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: 15),
                     TextFormField(
                       controller: passwordcontroler,
+                      obscureText: true,
                       decoration: InputDecoration(
                         prefixIcon: Icon(Icons.lock_outline),
                         suffixIcon: Icon(Icons.visibility_off_outlined),
@@ -81,7 +74,7 @@ class _LoginState extends State<Login> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 6),
+                    SizedBox(height: 10),
                     Row(
                       children: [
                         Checkbox(value: true, onChanged: (_) {}),
@@ -106,13 +99,13 @@ class _LoginState extends State<Login> {
                   ],
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 30),
               InkWell(
                 onTap: () => signin(),
                 child: Container(
                   child: Center(
                     child: Text(
-                      "sign In",
+                      "Sign In",
                       style: TextStyle(fontSize: 20, color: Colors.white),
                     ),
                   ),
@@ -124,7 +117,7 @@ class _LoginState extends State<Login> {
                   height: 50,
                 ),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 15),
               InkWell(
                 onTap: () {
                   Navigator.push(
@@ -156,20 +149,29 @@ class _LoginState extends State<Login> {
                   Flexible(
                     child: Divider(thickness: 1, indent: 60, endIndent: 5),
                   ),
-                  Text("or sign in with "),
+                  Text("or sign in with"),
                   Flexible(
                     child: Divider(thickness: 1, indent: 5, endIndent: 60),
                   ),
                 ],
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CircleAvatar(child: Image.asset("assets/pandasall.png")),
+                  CircleAvatar(
+                    backgroundColor: Colors.grey[200],
+                    child: Icon(
+                      Icons.g_mobiledata,
+                      size: 30,
+                      color: Colors.red,
+                    ),
+                  ),
                   SizedBox(width: 20),
-
-                  CircleAvatar(child: Image.asset("assets/pandasall.png")),
+                  CircleAvatar(
+                    backgroundColor: Colors.grey[200],
+                    child: Icon(Icons.facebook, size: 30, color: Colors.blue),
+                  ),
                 ],
               ),
             ],
